@@ -44,7 +44,7 @@ export const Launch: React.FC<{ orientation: "landscape" | "portrait" }> = ({ or
 
   // ── Camera push-in toward the star (10–12s), plus a gentle settle after.
   const push = keys(t, [T.pushIn.start, T.pushIn.end], [0, 1], easeIn);
-  const pushScale = revealed ? keys(t, [T.flashOut.start, T.flashOut.end + 1.5], [1.08, 1], easeOut) : 1 + 2.6 * push;
+  const pushScale = revealed ? keys(t, [T.flashOut.start, T.flashOut.end + 1.5], [1.08, 1], easeOut) : 1 + 2.2 * push;
   const pushOrigin = revealed ? `${w / 2}px ${h / 2}px` : `${starX}px ${starY}px`;
   const slowPush = 1 + 0.025 * ramp(t, T.flashOut.end, DURATION); // hold drift
 
@@ -89,6 +89,8 @@ export const Launch: React.FC<{ orientation: "landscape" | "portrait" }> = ({ or
   return (
     <AbsoluteFill style={{ backgroundColor: C.navy, overflow: "hidden", fontFamily: FONT }}>
       <Soundtrack />
+      {/* Skip the scene entirely while the flash fully covers it (saves very slow frames) */}
+      {flash < 0.985 && (
       <AbsoluteFill
         style={{
           transform: `scale(${pushScale * slowPush})`,
@@ -251,6 +253,7 @@ export const Launch: React.FC<{ orientation: "landscape" | "portrait" }> = ({ or
           <Particles count={14} seed={7} size={[3, 7]} opacity={0.35} blur={2.5} />
         </Layer>
       </AbsoluteFill>
+      )}
 
       {/* White-blue flash */}
       <AbsoluteFill

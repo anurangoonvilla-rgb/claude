@@ -13,8 +13,8 @@ import path from "node:path";
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const browserExecutable = "/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell";
 const chromiumOptions = { gl: "swangle" };
-const CHUNK = 60; // frames
-const CHUNK_TIMEOUT = 6 * 60 * 1000;
+const CHUNK = 30; // frames
+const CHUNK_TIMEOUT = 15 * 60 * 1000;
 const RETRIES = 4;
 const OUT = { Launch16x9: "out/launch-16x9.mp4", Launch9x16: "out/launch-9x16.mp4" };
 const ids = (process.argv[2] || "Launch16x9,Launch9x16").split(",");

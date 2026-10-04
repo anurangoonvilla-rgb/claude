@@ -38,9 +38,14 @@ export const Backdrop: React.FC<{ lightX: number; lightY: number }> = ({ lightX,
         <filter id="bd-soft" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="2.2" />
         </filter>
-        <filter id="bd-haze" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="70" />
-        </filter>
+        <radialGradient id="bd-haze-blue">
+          <stop offset="0" stopColor="#3d6bff" stopOpacity="1" />
+          <stop offset="1" stopColor="#3d6bff" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="bd-haze-cyan">
+          <stop offset="0" stopColor={C.cyan} stopOpacity="1" />
+          <stop offset="1" stopColor={C.cyan} stopOpacity="0" />
+        </radialGradient>
       </defs>
       <rect x={-w} y={-h} width={w * 3} height={h * 3} fill={C.navy} />
       <g opacity={on}>
@@ -59,8 +64,8 @@ export const Backdrop: React.FC<{ lightX: number; lightY: number }> = ({ lightX,
           <ellipse cx={-s * 0.1 + wv(5, 30)} cy={h + s * 0.08} rx={s * 0.6} ry={s * 0.45} fill="none" stroke="#8fd8ff" strokeOpacity={0.22} strokeWidth={2.5} filter="url(#bd-soft)" />
         </g>
         {/* Faint haze */}
-        <ellipse cx={w * 0.3 + wv(6, 60)} cy={h * 0.35} rx={s * 0.3} ry={s * 0.12} fill="#3d6bff" opacity={0.12} filter="url(#bd-haze)" />
-        <ellipse cx={w * 0.7 + wv(7, 60)} cy={h * 0.6} rx={s * 0.28} ry={s * 0.1} fill={C.cyan} opacity={0.07} filter="url(#bd-haze)" />
+        <ellipse cx={w * 0.3 + wv(6, 60)} cy={h * 0.35} rx={s * 0.4} ry={s * 0.18} fill="url(#bd-haze-blue)" opacity={0.14} />
+        <ellipse cx={w * 0.7 + wv(7, 60)} cy={h * 0.6} rx={s * 0.38} ry={s * 0.15} fill="url(#bd-haze-cyan)" opacity={0.08} />
       </g>
     </svg>
   );

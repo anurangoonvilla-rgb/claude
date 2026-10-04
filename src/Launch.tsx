@@ -95,6 +95,9 @@ export const Launch: React.FC<{ orientation: "landscape" | "portrait" }> = ({ or
         style={{
           transform: `scale(${pushScale * slowPush})`,
           transformOrigin: pushOrigin,
+          // Composite the scene as a bitmap while zooming instead of re-rasterising
+          // every blur at 3x (software GPU); the push ends in a white flash anyway.
+          willChange: push > 0 && !revealed ? "transform" : undefined,
         }}
       >
         {/* L1 · backdrop + waves */}
@@ -117,7 +120,6 @@ export const Launch: React.FC<{ orientation: "landscape" | "portrait" }> = ({ or
                 spill < 0.5 ? C.noteBlue : C.royal
               }55 45%, transparent 100%)`,
               opacity: logoIntroGlow * 0.85 + spill * 0.55 * (1 - ramp(t, T.logoMove.end, T.floorPool + 1)) * 1,
-              filter: "blur(40px)",
             }}
           />
         </Layer>

@@ -7,3 +7,4 @@ out/*.mp4
 # Source card PDF contains a member's personal details; only the extracted
 # wordmark vectors (src/wordmark-paths.json) are needed to build.
 assets/membership-card.pdf
+out/.chunks-*/

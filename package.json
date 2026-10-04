@@ -7,9 +7,9 @@
     "prepare-assets": "node scripts/prepare-assets.mjs",
     "voice": "node scripts/generate-voice.mjs",
     "stills": "node scripts/prepare-assets.mjs && node scripts/stills.mjs",
-    "render": "npm run prepare-assets && npm run render:16x9 && npm run render:9x16",
-    "render:16x9": "remotion render Launch16x9 out/launch-16x9.mp4 --codec=h264 --audio-codec=aac --enforce-audio-track",
-    "render:9x16": "remotion render Launch9x16 out/launch-9x16.mp4 --codec=h264 --audio-codec=aac --enforce-audio-track",
+    "render": "node scripts/prepare-assets.mjs && node scripts/render.mjs",
+    "render:16x9": "node scripts/prepare-assets.mjs && node scripts/render.mjs Launch16x9",
+    "render:9x16": "node scripts/prepare-assets.mjs && node scripts/render.mjs Launch9x16",
     "typecheck": "tsc"
   },
   "dependencies": {

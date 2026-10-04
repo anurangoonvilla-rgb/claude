@@ -1,0 +1,26 @@
+{
+  "name": "millionaire-club-launch",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "studio": "node scripts/prepare-assets.mjs && remotion studio",
+    "prepare-assets": "node scripts/prepare-assets.mjs",
+    "voice": "node scripts/generate-voice.mjs",
+    "stills": "node scripts/prepare-assets.mjs && node scripts/stills.mjs",
+    "render": "npm run prepare-assets && npm run render:16x9 && npm run render:9x16",
+    "render:16x9": "remotion render Launch16x9 out/launch-16x9.mp4 --codec=h264 --audio-codec=aac --enforce-audio-track",
+    "render:9x16": "remotion render Launch9x16 out/launch-9x16.mp4 --codec=h264 --audio-codec=aac --enforce-audio-track",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@fontsource/plus-jakarta-sans": "^5.3.0",
+    "@remotion/cli": "^4.0.532",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "remotion": "^4.0.532"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}

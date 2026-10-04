@@ -16,15 +16,17 @@ const chromiumOptions = { gl: "swangle" };
 const CHUNK = 30; // frames
 const CHUNK_TIMEOUT = 15 * 60 * 1000;
 const RETRIES = 4;
+const AUDIO_TIMEOUT = 90 * 60 * 1000;
 const OUT = { Launch16x9: "out/launch-16x9.mp4", Launch9x16: "out/launch-9x16.mp4" };
+const manifest = JSON.parse(fs.readFileSync(path.join(root, "src/asset-manifest.json"), "utf8"));
 const ids = (process.argv[2] || "Launch16x9,Launch9x16").split(",");
 
 const serveUrl = await bundle({ entryPoint: path.join(root, "src/index.ts"), publicDir: path.join(root, "public") });
 
-const withWatchdog = async (label, fn) => {
+const withWatchdog = async (label, fn, timeout = CHUNK_TIMEOUT) => {
   for (let attempt = 1; attempt <= RETRIES; attempt++) {
     const { cancelSignal, cancel } = makeCancelSignal();
-    const timer = setTimeout(cancel, CHUNK_TIMEOUT);
+    const timer = setTimeout(cancel, timeout);
     try {
       await fn(cancelSignal);
       clearTimeout(timer);
@@ -59,16 +61,24 @@ for (const id of ids) {
     console.log(`${id}: frames ${start}-${end} done`);
   }
   const audio = path.join(tmp, "audio.aac");
-  await withWatchdog(`${id} audio`, (cancelSignal) =>
-    renderMedia({ composition, serveUrl, browserExecutable, chromiumOptions, cancelSignal, codec: "aac", enforceAudioTrack: true, outputLocation: audio }),
-  );
+  const seconds = String(total / composition.fps);
+  if (!manifest.music && manifest.voice.mode === "none") {
+    // No music or voice supplied: write a silent AAC track directly.
+    execFileSync("ffmpeg", ["-y", "-v", "error", "-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", "-t", seconds, "-c:a", "aac", "-b:a", "192k", audio]);
+  } else if (!fs.existsSync(audio)) {
+    // Remotion evaluates every frame for the audio mix, so allow it longer.
+    await withWatchdog(`${id} audio`, (cancelSignal) =>
+      renderMedia({ composition, serveUrl, browserExecutable, chromiumOptions, cancelSignal, codec: "aac", enforceAudioTrack: true, concurrency: 3, outputLocation: audio }),
+      AUDIO_TIMEOUT,
+    );
+  }
   const list = path.join(tmp, "list.txt");
   fs.writeFileSync(list, parts.map((p) => `file '${p}'`).join("\n"));
   const out = path.join(root, OUT[id]);
   execFileSync("ffmpeg", [
     "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", list, "-i", audio,
     "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
-    "-t", String(total / composition.fps), "-movflags", "+faststart", out,
+    "-t", seconds, "-movflags", "+faststart", out,
   ]);
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`wrote ${OUT[id]}`);

@@ -311,7 +311,7 @@
       const hot = p.ruled ? morph : 0;
       const size = (0.9 + depth * 1.5) * p.ps * (1 + hot * 0.5);
       ctx.globalAlpha = depth * baseAlpha * (0.55 + hot * 0.45);
-      ctx.fillStyle = hot > 0.5 ? '#FFD23F' : (i % 9 === 0 ? '#FFD23F' : '#B9B2FF');
+      ctx.fillStyle = hot > 0.5 ? '#FFFFFF' : (i % 9 === 0 ? '#5C8DFF' : '#B9A8FF');
       ctx.beginPath();
       ctx.arc(p.px, p.py, size, 0, 6.2832);
       ctx.fill();

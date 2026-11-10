@@ -293,7 +293,7 @@
     const linkAlpha = (1 - morph * 0.85) * 0.22 * baseAlpha;
     if (linkAlpha > 0.01) {
       ctx.lineWidth = 1;
-      ctx.strokeStyle = `rgba(143,164,255,${linkAlpha})`;
+      ctx.strokeStyle = `rgba(169,160,255,${linkAlpha})`;
       ctx.beginPath();
       for (let k = 0; k < links.length; k += 2) {
         const a = pts[links[k]], b = pts[links[k + 1]];
@@ -311,7 +311,7 @@
       const hot = p.ruled ? morph : 0;
       const size = (0.9 + depth * 1.5) * p.ps * (1 + hot * 0.5);
       ctx.globalAlpha = depth * baseAlpha * (0.55 + hot * 0.45);
-      ctx.fillStyle = hot > 0.5 ? '#FFD23F' : (i % 9 === 0 ? '#FFD23F' : '#AFC0FF');
+      ctx.fillStyle = hot > 0.5 ? '#FFD23F' : (i % 9 === 0 ? '#FFD23F' : '#B9B2FF');
       ctx.beginPath();
       ctx.arc(p.px, p.py, size, 0, 6.2832);
       ctx.fill();
